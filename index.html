@@ -86,9 +86,15 @@
                     return false;
                 }
             }
+            var isURL = (value) => {
+                return value.startsWith('http://') || value.startsWith('https://');
+            }
             btn.onclick = () => {
                 document.getElementById('resultCard').style.display = 'none';
-                if(isEmptyValue(document.getElementById('domainUrl').value) || isEmptyValue(document.getElementById('appId').value) || isEmptyValue(document.getElementById('apiVersion').value)) {
+                if(!isURL(document.getElementById('domainUrl').value.trim())){
+                    document.getElementById('errorText').innerText = "Invalid Domain URL."
+                    setTimeout(() => document.getElementById('errorText').innerText = "", 3000);
+                }else if(isEmptyValue(document.getElementById('domainUrl').value) || isEmptyValue(document.getElementById('appId').value) || isEmptyValue(document.getElementById('apiVersion').value)) {
                     document.getElementById('errorText').innerText = "Please fill required fields."
                     setTimeout(() => document.getElementById('errorText').innerText = "", 3000);
                 }else {
@@ -97,9 +103,9 @@
                         ez.request({request: {
                             type: "login", request: JSON.stringify({
                                 "user": {
-                                    "userId": document.getElementById('userId').value,
-                                    "email": document.getElementById('emailId').value,
-                                    "phone": document.getElementById('phoneNumber').value,
+                                    "userId": document.getElementById('userId').value.trim(),
+                                    "email": document.getElementById('emailId').value.trim(),
+                                    "phone": document.getElementById('phoneNumber').value.trim(),
                                     "phoneRegion": "in",
                                     "metadata": {
                                         "allow_new_device": true
@@ -128,7 +134,7 @@
                                     }
                                 }
                             })
-                        }},{api:`${document.getElementById('domainUrl').value}/auth/realms/api/ezto_web_push/${document.getElementById('appId').value}/grootan/register`, apiVersion:document.getElementById('apiVersion').value},function(res){
+                        }},{api:`${document.getElementById('domainUrl').value.trim()}/auth/realms/api/ezto_web_push/${document.getElementById('appId').value.trim()}/grootan/register`, apiVersion:document.getElementById('apiVersion').value},function(res){
                             //Handle the result here;
                             document.getElementById('ez-overlay').style.display = 'none';
                             document.getElementById('resutlText').textContent = JSON.stringify(res, null, 4)
